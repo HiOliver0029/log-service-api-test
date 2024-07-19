@@ -1,0 +1,57 @@
+openapi: 3.0.0
+info:
+  title: Trading Center Log Service
+  version: 1.0.0
+paths:
+  /logs:
+    post:
+      summary: 記錄交易日誌
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionId:
+                  type: string
+                  description: 交易ID
+                message:
+                  type: string
+                  description: 日誌訊息
+                level:
+                  type: string
+                  description: 日誌等級
+                  enum: [INFO, WARNING, ERROR]
+      responses:
+        '201':
+          description: 日誌已成功記錄
+    get:
+      summary: 獲取交易日誌
+      parameters:
+        - name: transactionId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 成功獲取日誌
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    transactionId:
+                      type: string
+                    message:
+                      type: string
+                    level:
+                      type: string
+                    timestamp:
+                      type: string
+                      format: date-time
+        '404':
+          description: 找不到相關日誌

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log Viewer</title>
+</head>
+<body>
+    <h1>Log Viewer</h1>
+    <button id="refreshButton">Refresh Logs</button>
+    <div id="logs"></div>
+    <script>
+        document.getElementById('refreshButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/logs');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const logs = await response.json();
+                const logsDiv = document.getElementById('logs');
+                logsDiv.innerHTML = '';
+                logs.forEach(log => {
+                    const logElement = document.createElement('div');
+                    logElement.textContent = `${log.timestamp} - [${log.level}] - ${log.transactionId}: ${log.message}`;
+                    logsDiv.appendChild(logElement);
+                });
+            } catch (error) {
+                console.error('Error fetching logs:', error);
+            }
+        });
+    </script>
+</body>
+</html>
